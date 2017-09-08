@@ -20,7 +20,7 @@
         <?php foreach ($models as $brand):
 //        var_dump($brand->author->name);die;
             ?>
-            <tr>
+            <tr data-id="<?=$brand->id?>">
                 <td><?=$brand->id?></td>
                 <td><?=$brand->name?></td>
                 <td><?=$brand->intro?></td>
@@ -39,7 +39,7 @@
                     else{echo '已删除';}
                     ?></td>
                 <td> <a href="<?=\yii\helpers\Url::to(['brand/edit','id'=>$brand->id])?>" class="btn btn-link"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                    <a href="<?=\yii\helpers\Url::to(['brand/delete','id'=>$brand->id])?>" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+                    <a href="javascript:;"  class="btn btn-link del_btn"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
             </tr>
         <?php endforeach;?>
     </table>
@@ -50,3 +50,30 @@ echo \yii\widgets\LinkPager::widget([
     'prevPageLabel'=>'上一页',
     'nextPageLabel'=>'下一页'
 ]);
+/**
+ * @var $this \yii\web\View
+ */
+$del_url=\yii\helpers\Url::to(['brand/delete']);
+
+//注册js代码
+    $this->registerJs(new \yii\web\JsExpression(
+       <<<JS
+$('.del_btn').click(function() {
+  
+  if (confirm('确定要删除吗')){
+      var tr=$(this).closest('tr');
+      var id=tr.attr('data-id');
+
+      $.post("{$del_url}",{id:id},function(data) {
+        if(data=='success'){
+            tr.hide('slow');
+        }else{
+            alert('删除失败');
+        }
+      })
+  }
+})
+JS
+
+
+    ));
