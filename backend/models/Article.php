@@ -20,6 +20,9 @@ class Article extends \yii\db\ActiveRecord
     public function getArticle_detail(){
         return $this->hasOne(Article_detail::className(),['article_id'=>'id']);
     }
+    public function getArticleCategory(){
+        return $this->hasOne(ArticleCategory::className(),['id'=>'article_category_id']);
+    }
     /**
      * @inheritdoc
      */
@@ -34,7 +37,7 @@ class Article extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'intro', 'article_category_id', 'sort', 'status', 'create_time'], 'required'],
+            [['name', 'intro', 'article_category_id', 'sort', 'status'], 'required'],
             [['intro'], 'string'],
             [['article_category_id', 'sort', 'status', 'create_time'], 'integer'],
             [['name'], 'string', 'max' => 50],

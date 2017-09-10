@@ -11,7 +11,7 @@ class ArticleCategoryController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $book = ArticleCategory::find();
+        $book = ArticleCategory::find()->orWhere(['status'=>0])->orWhere(['status'=>1]);
         $pager = new Pagination([
             'totalCount' => $book->count(),//总条数
             'defaultPageSize' => 4//每页多少条
@@ -51,12 +51,14 @@ class ArticleCategoryController extends \yii\web\Controller
         }
         return $this->render('add',['model'=>$model]);
     }
-    public function actionDelete($id){
+    public function actionDelete(){
+        $id=\Yii::$app->request->post('id');
         $brand=ArticleCategory::findOne(['id'=>$id]);
-        $brand->status=-1;
-
-        $brand->save(false);
-        \Yii::$app->session->setFlash('success', '删除成功');
-        return $this->redirect(['article-category/index']);
+        if($brand){
+            $brand->status=-1;
+            $brand->save(false);
+            return 'success';
+        }
+        return '删除失败';
     }
 }
