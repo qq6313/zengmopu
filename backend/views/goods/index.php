@@ -1,15 +1,14 @@
 <?php
 $form = \yii\bootstrap\ActiveForm::begin([
     'method' => 'get',
-    //get方式提交,需要显式指定action
     'action'=>\yii\helpers\Url::to(['goods/index']),
     'options'=>['class'=>'form-inline']
 ]);
-echo $form->field($model,'name')->textInput(['placeholder'=>'商品名','name'=>'keyword'])->label(false);
+echo $form->field($model,'name')->textInput(['placeholder'=>'商品名'])->label(false);
 echo $form->field($model,'sn')->textInput(['placeholder'=>'货号'])->label(false);
-echo $form->field($model,'minPrice')->textInput(['placeholder'=>'￥'])->label(false);
-echo $form->field($model,'maxPrice')->textInput(['placeholder'=>'￥'])->label('-');
-echo \yii\bootstrap\Html::submitButton('搜索');
+echo $form->field($model,'minPrice')->textInput(['placeholder'=>'最小值'])->label(false);
+echo $form->field($model,'maxPrice')->textInput(['placeholder'=>'最大值'])->label('-');
+echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
 \yii\bootstrap\ActiveForm::end();
 ?>
     <table class="table table-bordered table-responsive">

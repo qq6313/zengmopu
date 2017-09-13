@@ -3,7 +3,7 @@
 use yii\bootstrap\Html;
 use yii\web\JsExpression;
 
-echo Html::fileInput('test', NULL, ['id' => 'test']);
+echo \yii\bootstrap\Html::fileInput('test', NULL, ['id' => 'test']);
 echo \flyok666\uploadifive\Uploadifive::widget([
     'url' => yii\helpers\Url::to(['s-upload']),
     'id' => 'test',
@@ -44,8 +44,11 @@ EOF
             <th>图片</th>
             <th>操作</th>
         </tr>
-        <?php foreach($goods->galleries as $gallery):?>
+        <?php foreach($goods->galleries as $gallery):
+            ?>
+
             <tr id="gallery_<?=$gallery->id?>" data-id="<?=$gallery->id?>">
+
                 <td><?=Html::img($gallery->path)?></td>
                 <td><?=Html::button('删除',['class'=>'btn btn-danger del_btn'])?></td>
             </tr>

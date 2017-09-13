@@ -18,6 +18,7 @@ use yii\web\Request;
 
 class GoodsController extends \yii\web\Controller
 {
+    public $enableCsrfValidation = false;
     public function actionIndex()
     {
         $model1=Goods::find();
@@ -140,8 +141,20 @@ class GoodsController extends \yii\web\Controller
     }
     public function actionGallery($id)
     {
-        $goods = Goods::findOne(['id'=>$id]);
 
+        $goods = Goods::findOne(['id'=>$id]);
+        $request=new Request();
+     /*   $model=new GoodsGallery();
+        if ($request->isPost) {
+            $model->load($request->post());
+            if ($model->validate()) {
+                $model->goods_id=$goods->id;
+                $model->save();
+            } else {
+                var_dump($model->getErrors());
+                exit;//失败就提示错误信息并且结束后面代码的执行
+            }
+        }*/
 
         return $this->render('gallery',['goods'=>$goods]);
 
@@ -197,6 +210,15 @@ class GoodsController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
+
+
+                    $model=new GoodsGallery();
+                    $model->goods_id=\Yii::$app->request->post('goods_id');
+                    $model->path = $action->getWebUrl();
+                    $model->save();
+                    $action->output['fileUrl'] = $model->path;
+
+
                     $qiniu = new Qiniu(\Yii::$app->params['qiniuyun']);//引用qiniuyun的路径
                     $key = $action->getWebUrl();
                     $file=$action->getSavePath();//上传到七牛云,指定一个文件名
