@@ -54,8 +54,8 @@ echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
                         echo '<img src="/upload/1.jpg" width="50">';
                     }?>
                 </td>
-                <td><?=$goods->goods_category_id?></td>
-                <td><?=$goods->brand_id?></td>
+                <td><?=$goods->goodsCategory->name?></td>
+                <td><?=$goods->brand->name?></td>
                 <td><?=$goods->market_price?></td>
                 <td><?=$goods->shop_price?></td>
                 <td><?=$goods->stock?></td>

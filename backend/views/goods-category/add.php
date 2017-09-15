@@ -6,10 +6,10 @@ echo '<div><ul id="treeDemo" class="ztree"></ul></div>';
 echo $form->field($model,'intro')->widget('kucha\ueditor\UEditor',[]);
 echo \yii\bootstrap\Html::submitButton('提交',['class'=>'btn btn-info']);
 \yii\bootstrap\ActiveForm::end();
+
 $this->registerCssFile('@web/ztree/css/zTreeStyle/zTreeStyle.css');
 $this->registerJsFile('@web/ztree/js/jquery.ztree.core.js',['depends'=>\yii\web\JqueryAsset::className()]);
 $goodsCategories = json_encode(\backend\models\GoodsCategory::getZtree());
-//var_dump($goodsCategories );die;
 $this->registerJs(new \yii\web\JsExpression(
         <<<JS
  var setting = {

@@ -54,9 +54,9 @@ class GoodsCategoryController extends \yii\web\Controller
                     $model->prependTo($parent);
                 }else{
                     if($model->getOldAttribute('parent_id'==0)){
-                        $model->save();
+                         $model->makeRoot();
                     }else{
-                        $model->makeRoot();
+                        $model->save();
                     }
 
                 }
@@ -70,13 +70,7 @@ class GoodsCategoryController extends \yii\web\Controller
     public function actionDelete(){
        $id=\Yii::$app->request->post('id');
         $node=GoodsCategory::findOne(['id'=>$id]);
-      /*  $children=GoodsCategory::findAll(['parent_id'=>$node->id]);
-//        var_dump($children);exit;
-        if($children==null){
-            $node->delete();
-            return 'success';
-        }*/
-      if ($node->isLeaf()){
+      if ($node->isLeaf()){//是否是叶子
           $node->deleteWithChildren();
           return 'success';
       }

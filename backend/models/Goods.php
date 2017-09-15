@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "goods".
@@ -24,6 +25,12 @@ use Yii;
  */
 class Goods extends \yii\db\ActiveRecord
 {
+    public static function getZtree(){
+    $category=GoodsCategory::find()->select(['id','name','parent_id'])->asArray()->all();
+    $cate=['id'=>0,'name'=>'顶级分类','parent_id'=>0];
+
+    return ArrayHelper::merge([$cate],$category);
+}
 
     /**
      * @inheritdoc
@@ -36,6 +43,14 @@ class Goods extends \yii\db\ActiveRecord
     public function getGalleries()
     {
         return $this->hasMany(GoodsGallery::className(),['goods_id'=>'id']);
+    }
+    public function getBrand()
+    {
+        return $this->hasOne(Brand::className(),['id'=>'brand_id']);
+    }
+    public function getGoodsCategory()
+    {
+        return $this->hasOne(GoodsCategory::className(),['id'=>'goods_category_id']);
     }
     /**
      * @inheritdoc

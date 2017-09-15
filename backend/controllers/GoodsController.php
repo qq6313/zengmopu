@@ -37,7 +37,6 @@ class GoodsController extends \yii\web\Controller
         $model = new Goods();
         $model1=new GoodsIntro();
         $model2=new GoodsDayCount();
-        $goodscategory = GoodsCategory::find()->all();
         $brand_id = Brand::find()->all();
         $request = new Request();
         if ($request->isPost) {
@@ -75,7 +74,7 @@ class GoodsController extends \yii\web\Controller
                 exit;
             }
         }
-        return $this->render('add',['goodscategory'=>$goodscategory,'model'=>$model,'brand_id'=>$brand_id,'model1'=>$model1]);
+        return $this->render('add',['model'=>$model,'brand_id'=>$brand_id,'model1'=>$model1]);
     }
 
     public function actionEdit($id)

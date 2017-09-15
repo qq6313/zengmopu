@@ -35,25 +35,35 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '品牌', 'url' => ['/brand/index']],
-        ['label' => '文章分类', 'url' => ['/article-category/index']],
-        ['label' => '文章', 'url' => ['/article/index']],
-        ['label' => '商品分类', 'url' => ['/goods-category/index']],
-        ['label' => '商品', 'url' => ['/goods/index']],
-    ];
+
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
-        $menuItems[] = '<li>'
+        $menuItems = [
+            ['label' => '品牌', 'url' => ['/brand/index']],
+            ['label' => '文章分类', 'url' => ['/article-category/index']],
+            ['label' => '文章', 'url' => ['/article/index']],
+            ['label' => '商品分类', 'url' => ['/goods-category/index']],
+            ['label' => '商品', 'url' => ['/goods/index']],
+            ['label' => '管理员', 'url' => ['/admin/index']],
+            ['label' => '修改密码', 'url' => ['/admin/password']],
+            ['label' => '权限管理', 'url' => ['/rbac/permissions-index']],
+            ['label' => '角色管理', 'url' => ['/rbac/index-role']],
+            ['label' => '注销', 'url' => ['/login/logout']]
+        ];
+
+     /*   $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
-            . '</li>';
+            . '</li>';*/
     }
+   /* if(!Yii::$app->user->isGuest){
+        $menuItems[] =   ['label' => '修改密码', 'url' => ['/admin/password']];
+    }*/
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

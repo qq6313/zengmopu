@@ -12,8 +12,7 @@ class ArticleController extends \yii\web\Controller
 {
     public function actionIndex()
     {
-        $book = Article::find()->orWhere(['status'=>0])->orWhere(['status'=>1]);;
-//        var_dump($book);die;
+        $book = Article::find()->orWhere(['status'=>0])->orWhere(['status'=>1]);
         $pager = new Pagination([
             'totalCount' => $book->count(),//总条数
             'defaultPageSize' => 4//每页多少条
