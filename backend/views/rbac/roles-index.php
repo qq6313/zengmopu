@@ -13,7 +13,8 @@
             <td><?=$role->name?></td>
             <td><?=$role->description?></td>
             <td> <a href="<?=\yii\helpers\Url::to(['rbac/edit-role','name'=>$role->name])?>" class="btn btn-link"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                <a href="javascript:;"  class="btn btn-link del_btn"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
+           <a href="<?=\yii\helpers\Url::to(['rbac/delete-role','name'=>$role->name])?>" class="btn btn-link"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+           </td>
         </tr>
     <?php endforeach;?>
 </table>

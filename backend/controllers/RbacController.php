@@ -67,10 +67,12 @@ class RbacController extends \yii\web\Controller
     }
     public function actionAddRole(){
         $model=new RoleForm();
+        $model->scenario=RoleForm::SCENARIO_ROLE;
         $requset=new Request();
         if($requset->isPost){
             $model->load($requset->post());
             if($model->validate()){
+
                 $auth=\Yii::$app->authManager;
                 $role=$auth->createRole($model->name);//创建新的角色
                 $role->description=$model->description;
@@ -92,5 +94,51 @@ class RbacController extends \yii\web\Controller
         $roles=$auth->getRoles();
         return $this->render('roles-index',['roles'=>$roles]);
     }
+    public function actionEditRole($name){
+        $model=new RoleForm();
 
+        $auth=\Yii::$app->authManager;
+        $roles=$auth->getRole($name);
+        $permissions=$auth->getPermissionsByRole($name);
+        $permission=[];
+        foreach ($permissions as $k=>$v){
+            $permission[]=$k;
+        }
+        $model->name=$roles->name;
+        $model->description=$roles->description;
+        $model->permissions=$permission;
+        $request=new Request();
+        if($request->isPost){
+            $model->load($request->post());
+            if($model->name!=$name){
+                $model->scenario=RoleForm::SCENARIO_ROLE;
+            }
+//            var_dump($model->name);die;
+            if($model->validate()){
+
+                $roles->name=$model->name;
+                $roles->description=$model->description;
+                $auth->update($name,$roles);
+                $auth->removeChildren($roles);
+                if($model->permissions){
+                    foreach($model->permissions as $permission){
+                        $auth->addChild($roles,$auth->getPermission($permission));
+                    }
+                }
+                \Yii::$app->session->setFlash('success',$roles->name.' 角色更新成功');
+                return $this->redirect(['rbac/index-role']);
+
+            }
+        }
+
+        return $this->render('role',['model'=>$model]);
+    }
+    public function actionDeleteRole($name){
+        $role = \Yii::$app->authManager->getRole($name);
+        \Yii::$app->authManager->remove($role);
+        return $this->redirect(['rbac/index-role']);
+    }
+    public function actionTest(){
+        return $this->render('test');
+    }
 }

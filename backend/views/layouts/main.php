@@ -39,7 +39,7 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
-        $menuItems = [
+      /*  $menuItems = [
             ['label' => '品牌', 'url' => ['/brand/index']],
             ['label' => '文章分类', 'url' => ['/article-category/index']],
             ['label' => '文章', 'url' => ['/article/index']],
@@ -50,16 +50,16 @@ AppAsset::register($this);
             ['label' => '权限管理', 'url' => ['/rbac/permissions-index']],
             ['label' => '角色管理', 'url' => ['/rbac/index-role']],
             ['label' => '注销', 'url' => ['/login/logout']]
-        ];
-
-     /*   $menuItems[] = '<li>'
+        ];*/
+        $menuItems=\backend\models\Admin::getMenus();
+        $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
-            . '</li>';*/
+            . '</li>';
     }
    /* if(!Yii::$app->user->isGuest){
         $menuItems[] =   ['label' => '修改密码', 'url' => ['/admin/password']];

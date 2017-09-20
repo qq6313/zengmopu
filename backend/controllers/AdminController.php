@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Admin;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -28,6 +29,14 @@ class AdminController extends \yii\web\Controller
             $model->load($request->post());
             if($model->validate()){
                 $model->save(false);
+                $authManager=\Yii::$app->authManager;
+//                var_dump($model->roles);die;
+                if ($model->roles){
+                    foreach($model->roles as $role1){
+                        $role= $authManager->getRole($role1);
+                        $authManager->assign($role,$model->id);
+                    }
+                }
                 \Yii::$app->session->setFlash('success', '添加成功');
                 return $this->redirect(['admin/index']);
             }else{
@@ -44,6 +53,9 @@ class AdminController extends \yii\web\Controller
         if($model==null){
             throw new NotFoundHttpException('用户不存在');
         }
+        $authManager=\Yii::$app->authManager;
+        $roles=$authManager->getRolesByUser($id);
+        $model->roles=array_keys($roles);
         $password=$model->password_hash;
         $request=new Request();
         if($request->isPost){
@@ -56,6 +68,14 @@ class AdminController extends \yii\web\Controller
                 $model->last_login_time=time();
                 $model->last_login_ip=$request->userIP;
                 $model->save(false);
+                $authManager->revokeAll($id);
+//                var_dump($model->roles);die;
+                if($model->roles){
+                    foreach($model->roles as $role1){
+                        $role= $authManager->getRole($role1);
+                        $authManager->assign($role,$model->id);
+                    }
+                }
                 \Yii::$app->session->setFlash('success', '修改成功');
                 return $this->redirect(['admin/index']);
             }else{
@@ -68,6 +88,8 @@ class AdminController extends \yii\web\Controller
     public function actionDelete(){
         $id=\Yii::$app->request->post('id');
         $brand=Admin::findOne(['id'=>$id]);
+        $auth=\Yii::$app->authManager;
+        $auth->revokeAll($id);
         $brand->delete();
         return 'success';
 
@@ -98,4 +120,15 @@ class AdminController extends \yii\web\Controller
         }
         return $this->render('password',['model'=>$model]);
     }
+
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['logout','login','captcha','error','user']
+            ]
+        ];
+    }
+
 }

@@ -26,6 +26,10 @@ class Admin extends \yii\db\ActiveRecord  implements IdentityInterface
     public $old_password;
     public $repassword;
 
+    public $name;
+    public $description;
+    public $roles;
+
     const SCENARIO_ADD='add';
     const SCENARIO_EDIT='edit';
     const SCENARIO_OLD='old';
@@ -43,7 +47,7 @@ class Admin extends \yii\db\ActiveRecord  implements IdentityInterface
         if($insert){
             $this->password_hash= \Yii::$app->security->generatePasswordHash($this->password);
             $this->created_at=time();
-//            $this->last_login_ip=Yii::$app->request->userIP;
+
             $this->auth_key=\Yii::$app->security->generateRandomString();
         }else{
             $this->updated_at=time();
@@ -54,6 +58,33 @@ class Admin extends \yii\db\ActiveRecord  implements IdentityInterface
         }
         return parent::beforeSave($insert);
     }
+
+    public static function getMenus()
+    {
+        $menuItems = [];
+        $menus = Menu::find()->where(['parent_menu' => 0])->all();
+        foreach ($menus as $menu) {
+            $children = Menu::find()->where(['parent_menu' => $menu->id])->all();
+            $items = [];
+            foreach ($children as $child) {
+                if(Yii::$app->user->can($child->address)) {
+                    $items[] = ['label' => $child->name, 'url' => [$child->address]];
+                }
+            }
+            $menuItems[] = ['label' => $menu->name, 'items' => $items];
+        }
+        return $menuItems;
+    }
+
+    public static function getPermissionItems(){
+        $permissions=\Yii::$app->authManager->getRoles();
+        $items=[];
+        foreach ($permissions as $permission){
+            $items[$permission->name]=$permission->description;
+        }
+        return $items;
+    }
+
     /**
      * @inheritdoc
      */
@@ -67,6 +98,7 @@ class Admin extends \yii\db\ActiveRecord  implements IdentityInterface
             [['username', 'password', 'email'], 'string', 'max' => 255],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            ['roles','safe']
         ];
     }
 

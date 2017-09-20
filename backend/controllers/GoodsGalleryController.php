@@ -23,12 +23,6 @@ class GoodsGalleryController extends \yii\web\Controller
         public function actionAdd()
         {
             $model=new GoodsGallery();
-           /* if(isset($_POST['Upload'])) {
-                $model->path=UploadedFile::getInstance($model,'path');
-                $ext = $model->path->getExtension();
-                $fileName = uniqid() . '.' . $ext;
-                $model->path->saveAs('assets/' . $fileName);
-            }*/
             $request=new Request();
             if ($request->isPost){
                 $model->load($request->post());
@@ -44,7 +38,7 @@ class GoodsGalleryController extends \yii\web\Controller
                     exit;
                 }
             }
-            $this->render('add', ['model'=>$model]);
+           return  $this->render('add', ['model'=>$model]);
         }
 
 
