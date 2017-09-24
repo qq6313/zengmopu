@@ -4,6 +4,7 @@
 @时间：2013年11月14日
 */
 
+
 $(function(){
 	
 	//减少
@@ -24,7 +25,26 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        changeCart($(this).closest('tr').attr('data-id'),amount.val());
 	});
+
+	$('.aclo5').text($('.amount').val()*$('.acol3').text());
+
+	var goods_id=$('.amount').attr('id');
+
+	$('.delete').click(
+		function () {
+			$.post("/index/ajax.html",{'goods1_id':goods_id},function (data) {
+
+				if(data=='success'){
+                    var tr=$(this).closest('tr');
+                    tr.hide('slow');
+                    location.reload();
+				}
+            })
+        }
+	)
+
 
 	//增加
 	$(".add_num").click(function(){
@@ -40,7 +60,11 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        changeCart($(this).closest('tr').attr('data-id'),amount.val());
 	});
+
+
+
 
 	//直接输入
 	$(".amount").blur(function(){
@@ -58,6 +82,11 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
-
+        var amount = $(this).parent().find(".amount");
+        changeCart($(this).closest('tr').attr('data-id'),amount.val());
 	});
 });
+var changeCart = function(goods_id,amount){
+    $.post("/index/ajax.html",{goods_id:goods_id,amount:amount},function(){});
+}
+

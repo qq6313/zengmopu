@@ -4,6 +4,18 @@
 @时间：2013年11月14日
 */
 $(function(){
+
+
+$('.yunfei').click(
+	function () {
+		var money=$(this).attr('data-id');
+
+		var total=$('.zonge').attr('data-id');
+		$('.zongyunfei').text('￥'+money)
+		$('.zonge').text('￥'+(parseInt(money)+parseInt(total))+'元')
+    }
+)
+
 	//收货人修改
 	$("#address_modify").click(function(){
 		$(this).hide();

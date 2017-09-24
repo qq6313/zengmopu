@@ -36,25 +36,26 @@ class RegistController extends Controller{
     }
     public function actionSms($phone){
         // 调用示例：
-
-  /*    $demo = new \frontend\models\SmsDemo(
+        $code='';
+      $demo = new \frontend\models\SmsDemo(
             "LTAIY9EmvG25yMwl",
             "cRYOkuQ92hhnJK4dNSCVdVpryi1lsR"
         );
 
 //        echo "SmsDemo::sendSms\n";
+
         $response = $demo->sendSms(
             "曾大大的茶馆", // 短信签名
             "SMS_97925001", // 短信模板编号
-            $tel, // 短信接收者
+            $phone, // 短信接收者
           $code=  Array(  // 短信模板中字段的值
                 "code"=>rand(10000,99999),
 
             )
 
-        );*/
+        );
 
-         $code=rand(10000,99999);
+//         $code=rand(10000,99999);
          $redis=new \Redis();
          $redis->connect('127.0.0.1');
          $redis->set('captcha'.$phone,$code);
