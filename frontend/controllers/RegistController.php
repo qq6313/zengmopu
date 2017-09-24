@@ -74,6 +74,7 @@ class RegistController extends Controller{
         $redis=new \Redis();
         $redis->connect('127.0.0.1');
         $code=$redis->get('captcha'.$phone);
+        echo json_encode($code);
         if($code==null || $code != $sms){
             return 'false';
 
